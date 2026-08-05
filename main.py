@@ -1,10 +1,15 @@
 from fastapi import FastAPI
+from app.database import testar_conexao
+from app.api import clientes
 
 app = FastAPI(
     title="TechService Integration API",
     description="API inicial da UC00614 — Integração de Sistemas de Informação",
     version="1.0.0",
 )
+
+app.include_router(clientes.router, prefix="/api/clientes", tags=["Clientes"])
+
 
 @app.get("/", tags=["Sistema"])
 def inicio():
@@ -14,20 +19,15 @@ def inicio():
         "mensagem": "API em funcionamento",
     }
 
+
 @app.get("/api/status", tags=["Sistema"])
 def consultar_status():
     return {
         "api": "online",
-        "base_dados": "não conectada",
+        "base_dados": "conectada" if testar_conexao() else "não conectada",
         "ambiente": "desenvolvimento",
     }
 
-@app.get("/api/clientes", tags=["Clientes"])
-def listar_clientes():
-    return [
-        {"id": 1, "nome": "Ana Martins", "email": "ana.martins@example.com", "telefone": "910000001"},
-        {"id": 2, "nome": "Carlos Silva", "email": "carlos.silva@example.com", "telefone": "910000002"},
-    ]
 
 if __name__ == "__main__":
     import uvicorn
