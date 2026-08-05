@@ -1,6 +1,8 @@
-class Cliente:
-    def __init__(self, id_cliente, nome, email, telefone):
-        self.id_cliente = id_cliente
-        self.nome = nome
-        self.email = email
-        self.telefone = telefone
+from pydantic import BaseModel, EmailStr, Field
+
+
+class Cliente(BaseModel):
+    id_cliente: int
+    nome: str = Field(min_length=2, max_length=150)
+    telefone: str | None = None
+    email: EmailStr | None = None
